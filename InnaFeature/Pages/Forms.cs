@@ -8,8 +8,6 @@ namespace InnaFeature.Pages
         {
 
         }
-        public IWebElement Section(string section) =>
-            WebDriver.FindElement(By.XPath($"//*[@class='text'][contains(text(), '{section}')]")); //this element is defined in every class. Should be on BasePage?
         public IWebElement InputFields(string fieldname) =>
             WebDriver.FindElement(By.XPath($"//*[@id='{fieldname}']"));
         public IWebElement FemaleRadioButton =>

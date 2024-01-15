@@ -8,8 +8,6 @@ namespace InnaFeature.Pages
         {
 
         }
-        public IWebElement Section(string section) =>
-           WebDriver.FindElement(By.XPath($"//*[@class='text'][contains(text(), '{section}')]"));
         public IWebElement MultipleColorNamesField =>
             WebDriver.FindElement(By.XPath("//*[@id='autoCompleteMultipleInput']"));
         public IWebElement AutocompleteSuggestions(string lowercaseLetter) =>

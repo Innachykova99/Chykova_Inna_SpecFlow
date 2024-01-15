@@ -2,10 +2,10 @@
 
 namespace InnaFeature.Helpers.Browser
 {
-    internal interface IBrowserHelper
+    interface IBrowserHelper
     {
-        public IWebDriver WebDriver { get; }
+        IWebDriver WebDriver { get; }
 
-        public void Teardown();
+        void Teardown();
     }
 }
