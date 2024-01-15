@@ -11,21 +11,22 @@ namespace InnaFeature.Steps
         private BasePage BasePage;
         private Forms forms;
 
-        [Given(@"I navigate to the category named ""([^""]*)"" and ""([^""]*)"" section")]
-        public void GivenINavigateToTheCategoryNamedForms()
+
+        [Given(@"User navigates to the category named ""([^""]*)""")]
+        public void UserNavigatesToTheCategoryNamedForms(string forms)
         {
             BasePage.NavigateToTheCategory("Forms");
         }
 
-        [Given(@"I navigate to the ""([^""]*)"" section")]
-        public void GivenINavigateToThePracticeFormSection()
+        [When(@"User navigates to the ""([^""]*)"" section")]
+        public void WhenUserNavigatesToThePractivceFormSection(string section)
         {
             forms.NavigateToTheSection("Practice Form");
         }
 
 
-        [When(@"I fill out the text fields with data from the table Examples:")]
-        public void WhenIFillOutTheTextFieldsWithDataFromTheTableExamples(Table table)
+        [When(@"User fills out the text fields with data from the table Examples:")]
+        public void UserFillsOutTheTextFieldsWithDataFromTheTableExamples(Table table)
         {
             var firstName = table.Rows[0]["First Name"];
             var lastName = table.Rows[0]["Last Name"];
@@ -40,13 +41,13 @@ namespace InnaFeature.Steps
             forms.InputFieldsAndSendKeys("CurrentAddress", currentAddress);
         }
 
-        [When(@"I select ""([^""]*)"" for ""([^""]*)""")]
-        public void WhenISelectFemaleForGender()
+        [When(@"User selects ""([^""]*)"" for Gender")]
+        public void WhenISelectFemaleForGender(string gender)
         {
             ((IJavaScriptExecutor)WebDriver).ExecuteScript("arguments[0].click();", forms.FemaleRadioButton);
         }
 
-        [When(@"I fill out the ""([^""]*)"" form with ""([^""]*)""")]
+        [When(@"User fills out the ""([^""]*)"" form with ""([^""]*)""")]
         public void WhenIFillOutTheDateOfBirthFormWithNewDate(string p0, string p1)
         {
             string monthNumber = "5";
@@ -66,7 +67,7 @@ namespace InnaFeature.Steps
 
         }
 
-        [When(@"I enter ""([^""]*)"" and ""([^""]*)"" in ""([^""]*)"" field")]
+        [When(@"User enters ""([^""]*)"" and ""([^""]*)"" in ""([^""]*)"" field")]
         public void WhenIEnterPhysicsAndMathInSubjectsField(string physics, string math, string subjects)
         {
             forms.SubjectsInput.Click();
@@ -87,7 +88,7 @@ namespace InnaFeature.Steps
 
 
 
-        [When(@"I select ""([^""]*)"" and ""([^""]*)"" checkboxes for ""([^""]*)""")]
+        [When(@"User selects ""([^""]*)"" and ""([^""]*)"" checkboxes for ""([^""]*)""")]
         public void WhenISelectReadingAndMusicCheckboxesForHobbies(string reading, string music, string hobbies)
         {
             var actions = new Actions(WebDriver);
@@ -100,8 +101,8 @@ namespace InnaFeature.Steps
 
         }
 
-        [When(@"I select ""([^""]*)"" for ""([^""]*)"" dropdown and ""([^""]*)"" for ""([^""]*)"" dropdown")]
-        public void WhenISelectDropdowns(string p0, string state, string merrut, string city)
+        [When(@"User selects ""([^""]*)"" for ""([^""]*)"" dropdown and ""([^""]*)"" for ""([^""]*)"" dropdown")]
+        public void WhenUserSelectsDropdowns(string p0, string state, string merrut, string city)
         {
 
             string stateName = "Uttar Pradesh";
@@ -114,13 +115,13 @@ namespace InnaFeature.Steps
             forms.StateCityOptions(cityName).Click();
         }
 
-        [When(@"I submit the form")]
-        public void WhenISubmitTheForm()
+        [When(@"User submits the form")]
+        public void WhenUserSubmitsTheForm()
         {
             forms.SubmitFormButton.Click();
         }
 
-        [Then(@"I verify the data in the modal matches the input data")]
+        [Then(@"User verifies the data in the modal matches the input data")]
         public void ThenIVerifyTheDataInTheModalMatchesTheInputData(Table table)
         {
             string studentName = table.Rows[0]["Student Name"];

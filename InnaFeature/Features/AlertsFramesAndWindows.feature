@@ -1,20 +1,21 @@
 ﻿ Feature: Alerts Frames And Windows
  
- Background: I am on https://demoqa.com/ homepage
+ Background: 
+ Given User is on https://demoqa.com/ homepage
 
 Scenario: Opening a New Tab
-    Given I am on the Alerts, Frame & Windows section
-    And I click "Browser Window" section
-    And I click the "New Tab" button
-    When I switch to the new tab
-    Then I verify that the text "This is a sample page" is present
+    Given User is on the "Alerts, Frame & Windows" section
+    When User clicks "Browser Window" section
+        And User clicks the "New Tab" button
+        And User switches to the new tab
+    Then User verifies that the text "This is a sample page" is present
 
 Scenario: Opening a New Window
-    Given I am on the Alerts, Frame & Windows section
-    And I navigate to "Browser Window" section
-    And I click the "New Window" button
-    When I switch to the new window
-    Then I verify that the text "This is a sample page" is presented
+    Given User is on the "Alerts, Frame & Windows" section
+    When User navigates to "Browser Window" section
+        And User clicks the "New Window" button
+        And User switches to the new window
+    Then User verifies that the text "This is a sample page" is presented
 
 
 
