@@ -1,46 +1,75 @@
-﻿using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using InnaFeature.Helpers.Browser;
+using InnaFeature.Pages;
 using NUnit.Framework;
-/*
+
 namespace InnaFeature.Steps
 {
     [Binding]
     internal class InteractionsSteps
     {
-        private readonly DriverHelper driverHelper = new DriverHelper();
+        private readonly BasePage basePage;
+        private readonly Interactions interactions;
+        private readonly IBrowserHelper browserHelper;
 
-        [Given(@"I navigate to the category ""([^""]*)"" and section ""([^""]*)""")]
-        public void GivenINavigateToTheInteractionsCategoryAndSelectableSection(string interactions, string selectable)
+        public InteractionsSteps(IBrowserHelper browserHelper)
         {
-            driverHelper.INavigateToTheInteractionsCategoryAndSelectableSection(interactions, selectable);
+            this.browserHelper = browserHelper;
+            basePage = new BasePage(browserHelper);
+            interactions = new Interactions(browserHelper);
         }
 
-        [When(@"I click on the ""([^""]*)"" tab")]
-        public void WhenIClickOnTheTab(string grid)
+        [Given(@"User is on the ""([^""]*)"" homepage")]
+        public void GivenUserIsOnTheDemoqa_ComHomepage(string applicationUnderTestUrl)
         {
-            driverHelper.IClickOnTheTab(grid);
-
+            browserHelper.WebDriver.Navigate().GoToUrl(applicationUnderTestUrl);
         }
 
-        [When(@"I select squares (.*), (.*), (.*), (.*), and (.*)")]
-        public void WhenISelectSquares(int p0, int p1, int p2, int p3, int p4)
+        [Given(@"User navigates to the category ""([^""]*)""")]
+        public void NavigateToTheInteractionsCategory(string category)
         {
-
-            driverHelper.ISelectSquares(p0, p1, p2, p3, p4);
-
+            basePage.NavigateToTheCategory(category);
         }
 
-        [Then(@"I verify the selected values are One, Three, Five, Seven, and Nine respectively")]
-        public void ThenIVerifyTheSelectedValuesAreOneThreeFiveSevenAndNineRespectively()
+        [When(@"User navigates to section ""([^""]*)""")]
+        public void NavigateToSelectableSection(string section)
         {
-            driverHelper.IVerifyTheSelectedValuesAreOneThreeFiveSevenAndNineRespectively();
-
+            basePage.NavigateToTheSection(section);
         }
 
+        [When(@"User clicks on the ""([^""]*)"" tab")]
+        public void NavigateToGridTab()
+        {
+            interactions.GridTab.Click();
+        }
+
+        [When(@"User selects squares (.*), (.*), (.*), (.*), and (.*)")]
+        public void SelectSquares()
+        {
+            string[] squareNumbersToSelect = new string[] { "One", "Three", "Five", "Seven", "Nine" };
+
+            foreach (string squareNumber in squareNumbersToSelect)
+            {
+                interactions.SquareElement(squareNumber).Click();
+            }
+        }
+
+        [Then(@"User verifies the selected values are One, Three, Five, Seven, and Nine respectively")]
+        public void VeriftySelectedSquares()
+        {
+            List<string> expectedValues = new List<string> { "One", "Three", "Five", "Seven", "Nine" };
+            List<string> actualValues = new List<string>();
+
+            foreach (var element in interactions.SelectedSquareElements())
+            {
+                actualValues.Add(element.Text);
+            }
+
+            expectedValues.Count.Should().Be(actualValues.Count, "Incorrect number of selected values");
+
+            for (int i = 0; i < expectedValues.Count; i++)
+            {
+                expectedValues[i].Should().BeEquivalentTo(actualValues[i], $"Value at index {i} does not match");
+            }
+        }
     }
-} */
+}

@@ -1,20 +1,22 @@
-﻿using OpenQA.Selenium;
+﻿using InnaFeature.Helpers.Browser;
+using OpenQA.Selenium;
 
 namespace InnaFeature.Pages
 {
     internal class BasePage
     {
-        protected IWebDriver WebDriver;
+        protected IBrowserHelper browserHelper;
 
-        public BasePage(IWebDriver driver)
+        public BasePage(IBrowserHelper browserhelper)
         {
-            WebDriver = driver ?? throw new ArgumentNullException(nameof(driver));
+            browserHelper = browserhelper ?? throw new ArgumentNullException(nameof(browserhelper));
+
         }
 
         public IWebElement ElementsTypeButtonByName(string name) =>
-            WebDriver.FindElement(By.XPath($"//*[@class='card-body']/h5[contains(text(), '{name}')]"));
+            browserHelper.WebDriver.FindElement(By.XPath($"//*[@class='card-body']/h5[contains(text(), '{name}')]"));
         public IWebElement Section(string section) =>
-           WebDriver.FindElement(By.XPath($"//*[@class='text'][contains(text(), '{section}')]"));
+           browserHelper.WebDriver.FindElement(By.XPath($"//*[@class='text'][contains(text(), '{section}')]"));
 
         public void NavigateToTheCategory(string categoryName)
         {
@@ -30,7 +32,5 @@ namespace InnaFeature.Pages
 
 
     }
-
-
 
 }

@@ -1,20 +1,21 @@
-﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using InnaFeature.Helpers.Browser;
+using OpenQA.Selenium;
 
 namespace InnaFeature.Pages
 {
     internal class AlertsFramesAndWindows : BasePage
     {
-        public AlertsFramesAndWindows(IWebDriver driver) : base(driver)
+        public AlertsFramesAndWindows(IBrowserHelper browserHelper) : base(browserHelper)
         {
 
         }
         public IWebElement NewTabButton =>
-            WebDriver.FindElement(By.XPath("//*[@id = 'tabButton']"));
+            browserHelper.WebDriver.FindElement(By.XPath("//*[@id = 'tabButton']"));
+        public IWebElement PresentedText =>
+            browserHelper.WebDriver.FindElement(By.XPath("//*[@id = 'sampleHeading' and contains(text(), 'This is a sample page')]"));
+        public IWebElement NewWindowButton =>
+            browserHelper.WebDriver.FindElement(By.XPath("//*[@id = 'windowButton']"));
+
 
     }
 

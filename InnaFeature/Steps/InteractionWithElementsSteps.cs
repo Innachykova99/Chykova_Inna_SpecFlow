@@ -1,172 +1,253 @@
-﻿using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium;
-using TechTalk.SpecFlow.Assist;
-using TechTalk.SpecFlow;
+﻿using InnaFeature.Helpers.Browser;
+using InnaFeature.Models;
+using InnaFeature.Pages;
 using NUnit.Framework;
-using System.Runtime.InteropServices;
-using NUnit.Framework.Constraints;
 using OpenQA.Selenium.Interactions;
-using System;
-using OpenQA.Selenium.Support.UI;
-/*
+
+
 namespace InnaFeature.Steps
 {
     [Binding]
     internal class InteractionWithElementsSteps
     {
-        private readonly DriverHelper driverHelper = new DriverHelper();
+        private readonly BasePage basePage;
+        private readonly InteractionWithElements interactionWithElements;
+        private readonly IBrowserHelper browserHelper;
 
-        /*  [When(@"I navigate to the ""([^""]*)"" category and ""([^""]*)"" section")]
-          public void WhenINavigateToTheCategoryAndSection(string category, string section)
-          {
-             driverHelper.INavigateToTheCategoryAndSection(category, section);
+        public InteractionWithElementsSteps(IBrowserHelper browserHelper)
+        {
+            this.browserHelper = browserHelper;
+            basePage = new BasePage(browserHelper);
+            interactionWithElements = new InteractionWithElements(browserHelper);
+        }
 
-          }
+        [Given(@"User is on the ""([^""]*)"" homepage")]
+        public void GivenUserIsOnTheDemoqa_ComHomepage(string applicationUnderTestUrl)
+        {
+            browserHelper.WebDriver.Navigate().GoToUrl(applicationUnderTestUrl);
+        }
 
-          [When(@"I complete the form with (.*) and (.*) and (.*) and (.*)")]
-          public void WhenICompleteTheFormWithFullNameAndEmailAndCurrentAddressAndPermanentAddress(string fullName, string email, string currentAddress, string permanentAddress)
-          {
-              driverHelper.ICompleteTheFormWithFullNameAndEmailAndCurrentAddressAndPermanentAddress(fullName, currentAddress, permanentAddress, email);
-          }
+        [Given(@"User navigates to the category ""([^""]*)""")]
+        public void NavigateToTheInteractionsCategory(string category)
+        {
+            basePage.NavigateToTheCategory(category);
+        }
 
+        [When(@"User navigates to section ""([^""]*)""")]
+        public void NavigateToSelectableSection(string section)
+        {
+            basePage.NavigateToTheSection(section);
+        }
 
-          [When(@"I click on ""([^""]*)""")]
-          public void WhenIClickOnSubmit(string submit)
-          {
-              driverHelper.IClickOnSubmit(submit);
-          }
+        [When(@"User completes the form with (.*) and (.*) and (.*) and (.*)")]
+        public void CompleteTheForm(Table table)
+        {
+            var formTestData = table.CreateInstance<FormTestData>();
 
+            interactionWithElements.InputFieldsAndSendKeys("FullName", formTestData.FullName);
+            interactionWithElements.InputFieldsAndSendKeys("Email", formTestData.Email);
+            interactionWithElements.InputFieldsAndSendKeys("CurrentAddress", formTestData.CurrentAddress);
+            interactionWithElements.InputFieldsAndSendKeys("PermanentAddress", formTestData.PermanentAddress);
 
+        }
 
-          [Then(@"I verify that (.*) and (.*) and (.*) and (.*) match the table content")]
-          public void ThenIVerifyThatAllEnteredDataMatchesTheTableContent(Table ExpectedData)
-          {
-              driverHelper.IVerifyThatAllEnteredDataMatchesTheTableContent(ExpectedData);
-          }
+        [When(@"User clicks on ""([^""]*)""")]
+        public void ClickOnSubmit()
+        {
+            interactionWithElements.SubmitButton.Click();
+        }
+
+        [Then(@"User verifies that (.*) and (.*) and (.*) and (.*) match the table content")]
+        public void VerifyTableContent(string fullName, string email, string currentAddress, string permanentAddress)
+        {
+            var expectedData = new FormTestData
+            {
+                FullName = fullName,
+                Email = email,
+                CurrentAddress = currentAddress,
+                PermanentAddress = permanentAddress
+            };
+        }
+
+        [Given(@"User navigates to the the category named ""([^""]*)""")]
+        public void NavigateToTheElementsCategory(string category)
+        {
+            basePage.NavigateToTheCategory(category);
+        }
+
+        [When(@"User navigates to the ""([^""]*)"" section")]
+        public void NavigateToTheCheckBoxSection(string section)
+        {
+            basePage.NavigateToTheSection(section);
+        }
+
+        [When(@"User expands the folder named ""([^""]*)""")]
+        public void ExpandTheFolderNamedHome(string folderNameExpand)
+        {
+            interactionWithElements.FolderExpand(folderNameExpand).Click();
+        }
+
+        [When(@"User selects the ""([^""]*)"" folder without expanding it")]
+        public void SelectTheFolderWithoutExpanding()
+        {
+            interactionWithElements.DesktopCheckbox.Click();
+        }
+
+        [When(@"User expands the ""([^""]*)"" folder")]
+        public void ExpandDocumentsFolder(string folderNameExpand)
+        {
+            interactionWithElements.FolderExpand(folderNameExpand).Click();
+        }
+
+        [When(@"User expands the ""([^""]*)"" folder")]
+        public void ExpandWorkSpaceFolder(string folderNameExpand)
+        {
+            interactionWithElements.FolderExpand(folderNameExpand).Click();
+        }
+
+        [When(@"User selects ""([^""]*)"" and ""([^""]*)"" from the WorkSpace folder")]
+        public void SelectElementsFromFolder(string element1, string element2)
+        {
+            interactionWithElements.FolderContainElement(element1).Click();
+            interactionWithElements.FolderContainElement(element2).Click();
+        }
+
+        [When(@"User expands the ""([^""]*)"" folder")]
+        public void ExpandOfficeFolder(string folderNameExpand)
+        {
+            interactionWithElements.FolderExpand(folderNameExpand);
+        }
+
+        [When(@"User clicks on each element in the Office folder one by one")]
+        public void SelectEachElement(string officeFile)
+        {
+            string[] officeElements = { "Public", "Private", "Classified", "General" };
+            foreach (string elementLabel in officeElements)
+            {
+                interactionWithElements.OfficeFolderContainElement(officeFile).Click();
+
+            }
+        }
+
+        [When(@"User expands the ""([^""]*)"" folder")]
+        public void ExpandTheDownloadsFolder(string folderName)
+        {
+            interactionWithElements.FolderExpand(folderName);
+        }
+
+        [When(@"User selects the entire ""([^""]*)"" folder")]
+        public void SelectTheDownloadsFolder()
+        {
+            interactionWithElements.DownloadsFolderSelect.Click();
+        }
+
+        [Then(@"User verifies that the output contains ""([^""]*)""")]
+        public void OutputContains(string expectedText)
+        {
+            var actualText = interactionWithElements.OutputResult.Text;
+            actualText.Should().BeEquivalentTo(expectedText);
+        }
+
+        [Given(@"User navigates to the the category named ""([^""]*)""")]
+        public void NavigateToElementsCategory(string category)
+        {
+            basePage.NavigateToTheCategory(category);
+        }
+
+        [When(@"User navigates to the ""([^""]*)"" section")]
+        public void NavigateToTheWebTablesSection(string section)
+        {
+            basePage.NavigateToTheSection(section);
+        }
+
+        [When(@"User clicks on the Salary column header")]
+        public void ClickOnColumnHeader()
+        {
+            interactionWithElements.SalaryColumnHeader.Click();
+        }
+
+        [Then(@"User verifies that the Salary column values are in ascending order")]
+        public void VerifyThatTheSalaryColumnValuesAreInAscendingOrder()
+        {
+            var salaryValues = browserHelper.WebDriver.interactionWithElements.SalaryElements.Select(element => element.Text)
+                                             .Where(text => double.TryParse(text, out _))
+                                             .ToList();
+
+            var isAscending = IsSortedAscending(salaryValues);
+            salaryValues.Should().HaveCount(isAscending.Count);
+        }
+        public bool IsSortedAscending(List<string> values)
+        {
+            var numbers = values.Select(double.Parse).ToList();
+            var sortedNumbers = new List<double>(numbers);
+            sortedNumbers.Sort();
+
+            return numbers.SequenceEqual(sortedNumbers);
+        }
+
+        [When(@"User deletes the second row from the table")]
+        public void DeleteTheSecondRowFromTheTable()
+        {
+            interactionWithElements.DeleteSecondRow.Click();
+        }
+
+        [Then(@"User checks that there are only two rows left and no ""([^""]*)"" value in the Department column")]
+        public void TwoRowsLeftAndNoComplianceValueInTheDepartmentColumn(string unwantedValue)
+        {
+            var DepartmentRows = interactionWithElements.RowElements.ToString().ToList();
 
            
 
-        [Given(@"I navigate to the the category named ""([^""]*)"" and ""([^""]*)"" section")]
-        public void GivenINavigateToTheTheCategoryNamedElementsAndCheckBoxSection(string category, string section)
+           // unwantedValuePresent.Should().BeFalse($"No {unwantedValue} value should be present in the department column for any row");
+
+            // create list of existing firstnames, use linq (method Exist (+lambda expression) = > receive true/false 
+        }
+
+
+        [Given(@"User navigates to the category ""([^""]*)""")]
+        public void NavigateToElementssCategory(string category)
         {
-            driverHelper.INavigateToTheTheCategoryNamedElementsAndCheckBoxSection(category, section);
+            basePage.NavigateToTheCategory(category);
         }
 
-        [Given(@"I expand the folder named ""([^""]*)""")]
-        public void GivenIExpandTheFolderNamedHome(string home)
+        [When(@"User navigates to section ""([^""]*)""")]
+        public void NavigateToButtonsSection(string section)
         {
-            driverHelper.IExpandTheFolderNamedHome(home);
+            basePage.NavigateToTheSection(section);
         }
 
-        [Given(@"I select the ""([^""]*)"" folder without expanding it")]
-        public void GivenISelectTheFolderWithoutExpandingIt(string folderName)
+        [When(@"User performs (.*) on the (.*) button")]
+        public void PerformActionsOnButtons(string action, string buttonName)
         {
-            driverHelper.ISelectTheFolderWithoutExpandingIt(folderName);
+
+            Actions actions = new Actions(browserHelper.WebDriver);
+            switch (action)
+            {
+                case "single click":
+                    actions.Click(interactionWithElements.ClickMeButtons(buttonName));
+                    break;
+
+                case "double click":
+                    actions.DoubleClick(interactionWithElements.ClickMeButtons(buttonName));
+                    break;
+
+                case "right click":
+                    actions.ContextClick(interactionWithElements.ClickMeButtons(buttonName));
+                    break;
+
+                default:
+                    break;
+            }
         }
 
-        [Given(@"I expand the ""([^""]*)"" folder and ""([^""]*)"" folder")]
-        public void GivenIExpandDocumentsAndWorkSpaceFolders(string folder1, string folder2)
+        [Then(@"User verifies that the respective message appears")]
+        public void VerifyThatTheRespectiveMessageAppears(string message) //(string doubleClickMessage, string rightClickMessage, string dynamicClickMessage)
         {
-           driverHelper.IExpandDocumentsAndWorkSpaceFolders(folder1, folder2);
+            var displayedMessage = interactionWithElements.MessageAfterClick(message);
+            displayedMessage.Displayed.Should().BeTrue($"Expected message '{message}' is not displayed.");
         }
 
-        [Given(@"I select ""([^""]*)"" and ""([^""]*)"" from the ""([^""]*)"" folder")]
-        public void GivenISelectAngularAndVeuElementsFromWorkSpaceFolder(string element1, string element2, string foldername)
-        {
-            driverHelper.ISelectAngularAndVeuElementsFromWorkSpaceFolder(element1, element2, foldername);
-        }
-
-        [Given(@"I expand the ""([^""]*)"" folder")]
-
-        public void GivenIExpandOfficeFolder(string folderName)
-        {
-            driverHelper.IExpandOfficeFolder(folderName);
-        }
-
-        [When(@"I click on each element in the ""([^""]*)"" folder one by one")]
-       
-        public void WhenIClickOnEachElementInTheOfficeFolder (string office)
-        {
-            driverHelper.IClickOnEachElementInTheOfficeFolder(office);
-        }
-
-        [When (@"I expand the ""([^""]*)"" folder")]
-        public void AndIExpandTheDownloadsFolder (string folderName)
-        {
-           driverHelper.IExpandTheDownloadsFolder(folderName);
-        }
-
-        [When(@"I select the entire ""([^""]*)"" folder")]
-        public void WhenISelectTheEntireFolder(string folderName)
-        {
-            driverHelper.ISelectTheEntireFolder (folderName);
-        
-        }
-
-        [Then(@"I verify that the output contains ""([^""]*)""")]
-        public void ThenIVerifyThatTheOutputContains(string ExpectedText)
-        { 
-        driverHelper.IVerifyThatTheOutputContains (ExpectedText);
-        }
-
-
-
-
-        [Given(@"I navigate to the ""([^""]*)"" category and section named ""([^""]*)""")]
-        public void GivenINavigateToTheElementsCategoryAndSectionNamedWebTables(string category, string section)
-        {
-         
-            driverHelper.INavigateToTheElementsCategoryAndSectionNamedWebTables (category, section);
-        }
-
-    [When(@"I click on the Salary column header")]
-        public void WhenIClickOnTheSalaryColumnHeader()
-        {
-           driverHelper.IClickOnTheSalaryColumnHeader();
-        }
-       
-        
-
-        [Then(@"I verify that the Salary column values are in ascending order")]
-        public void ThenIVerifyThatTheSalaryColumnValuesAreInAscendingOrder()
-        {
-            driverHelper.IVerifyThatTheSalaryColumnValuesAreInAscendingOrder();
-        }
-
-
-
-        [Then(@"I delete the second row from the table")]
-        public void ThenIDeleteTheSecondRowFromTheTable()
-        {
-           driverHelper.IDeleteTheSecondRowFromTheTable();
-        }
-
-        [Then(@"I check that there are only two rows left and no ""([^""]*)"" value in the Department column")]
-        public void ThenICheckThatThereAreOnlyTwoRowsLeftAndNoComplianceValueInTheDepartmentColumn(string compliance)
-        {
-            driverHelper.ICheckThatThereAreOnlyTwoRowsLeftAndNoComplianceValueInTheDepartmentColumn (compliance);
-        }
-
-
-
-
-        [Given(@"I navigate to the ""([^""]*)"" category and ""([^""]*)"" section")]
-        public void GivenINavigateToTheElementsCategoryAndButtonsSection(string elements, string buttons)
-        {
-            driverHelper.INavigateToTheElementsCategoryAndButtonsSection (elements, buttons);
-        }
-
-        [When(@"I perform (.*) on the (.*) button")]
-        public void WhenIPerformActionsOnButtons(string action0, string buttonName)
-        {
-           driverHelper.IPerformActionsOnButtons (action0, buttonName);
-        }
-
-        [Then(@"I verify that the respective message appears")]
-        public void ThenIVerifyThatTheRespectiveMessageAppears()
-        {
-            driverHelper.IVerifyThatTheRespectiveMessageAppears();
-        }
     }
-   
-} */
+
+}
+

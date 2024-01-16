@@ -1,7 +1,7 @@
 ﻿Feature: Interactions
 
 Background: 
-Given User is on the demoqa.com homepage
+Given User is on the "https://demoqa.com/" homepage
 
   Scenario: Testing Selectable interaction
     Given User navigates to the category "Interactions" 
