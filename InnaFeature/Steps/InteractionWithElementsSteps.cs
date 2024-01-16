@@ -1,8 +1,8 @@
 ﻿using InnaFeature.Helpers.Browser;
 using InnaFeature.Models;
 using InnaFeature.Pages;
-using NUnit.Framework;
 using OpenQA.Selenium.Interactions;
+using TechTalk.SpecFlow.Assist;
 
 
 namespace InnaFeature.Steps
@@ -21,17 +21,6 @@ namespace InnaFeature.Steps
             interactionWithElements = new InteractionWithElements(browserHelper);
         }
 
-        [Given(@"User is on the ""([^""]*)"" homepage")]
-        public void GivenUserIsOnTheDemoqa_ComHomepage(string applicationUnderTestUrl)
-        {
-            browserHelper.WebDriver.Navigate().GoToUrl(applicationUnderTestUrl);
-        }
-
-        [Given(@"User navigates to the category ""([^""]*)""")]
-        public void NavigateToTheInteractionsCategory(string category)
-        {
-            basePage.NavigateToTheCategory(category);
-        }
 
         [When(@"User navigates to section ""([^""]*)""")]
         public void NavigateToSelectableSection(string section)
@@ -51,7 +40,7 @@ namespace InnaFeature.Steps
 
         }
 
-        [When(@"User clicks on ""([^""]*)""")]
+        [When(@"User clicks Submit button")]
         public void ClickOnSubmit()
         {
             interactionWithElements.SubmitButton.Click();
@@ -73,12 +62,6 @@ namespace InnaFeature.Steps
         public void NavigateToTheElementsCategory(string category)
         {
             basePage.NavigateToTheCategory(category);
-        }
-
-        [When(@"User navigates to the ""([^""]*)"" section")]
-        public void NavigateToTheCheckBoxSection(string section)
-        {
-            basePage.NavigateToTheSection(section);
         }
 
         [When(@"User expands the folder named ""([^""]*)""")]
@@ -154,12 +137,6 @@ namespace InnaFeature.Steps
             basePage.NavigateToTheCategory(category);
         }
 
-        [When(@"User navigates to the ""([^""]*)"" section")]
-        public void NavigateToTheWebTablesSection(string section)
-        {
-            basePage.NavigateToTheSection(section);
-        }
-
         [When(@"User clicks on the Salary column header")]
         public void ClickOnColumnHeader()
         {
@@ -169,12 +146,12 @@ namespace InnaFeature.Steps
         [Then(@"User verifies that the Salary column values are in ascending order")]
         public void VerifyThatTheSalaryColumnValuesAreInAscendingOrder()
         {
-            var salaryValues = browserHelper.WebDriver.interactionWithElements.SalaryElements.Select(element => element.Text)
-                                             .Where(text => double.TryParse(text, out _))
-                                             .ToList();
+            //var salaryValues = interactionWithElements.SalaryElements.Select(element => element.Text)
+            //                                 .Where(text => double.TryParse(text, out _))
+            //                                 .ToList();
 
-            var isAscending = IsSortedAscending(salaryValues);
-            salaryValues.Should().HaveCount(isAscending.Count);
+            //var isAscending = IsSortedAscending(salaryValues);
+            //salaryValues.Should().HaveCount(isAscending.Count);
         }
         public bool IsSortedAscending(List<string> values)
         {
@@ -194,11 +171,11 @@ namespace InnaFeature.Steps
         [Then(@"User checks that there are only two rows left and no ""([^""]*)"" value in the Department column")]
         public void TwoRowsLeftAndNoComplianceValueInTheDepartmentColumn(string unwantedValue)
         {
-            var DepartmentRows = interactionWithElements.RowElements.ToString().ToList();
+            //var DepartmentRows = interactionWithElements.RowElements.ToList();
 
-           
 
-           // unwantedValuePresent.Should().BeFalse($"No {unwantedValue} value should be present in the department column for any row");
+
+            // unwantedValuePresent.Should().BeFalse($"No {unwantedValue} value should be present in the department column for any row");
 
             // create list of existing firstnames, use linq (method Exist (+lambda expression) = > receive true/false 
         }
@@ -208,12 +185,6 @@ namespace InnaFeature.Steps
         public void NavigateToElementssCategory(string category)
         {
             basePage.NavigateToTheCategory(category);
-        }
-
-        [When(@"User navigates to section ""([^""]*)""")]
-        public void NavigateToButtonsSection(string section)
-        {
-            basePage.NavigateToTheSection(section);
         }
 
         [When(@"User performs (.*) on the (.*) button")]

@@ -32,5 +32,7 @@ namespace InnaFeature.Helpers.Browser
             }
             return WebDriver;
         }
+
     }
 }
+

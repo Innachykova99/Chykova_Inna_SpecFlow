@@ -38,13 +38,6 @@ namespace InnaFeature.Pages
         public IWebElement DataInModal(string fieldName, string expectedValue) =>
             browserHelper.WebDriver.FindElement(By.XPath($"//*[@class = 'table-responsive']//td[contains(text(), '{fieldName}')]/following-sibling::td[contains(text(), '{expectedValue}')]"));
 
-        public void NavigateToTheSection(string section)
-        {
-            IWebElement sectionButton = Section(section);
-            sectionButton.Click();
-
-        }
-
         public void InputFieldsAndSendKeys(string fieldname, string value)
         {
             IWebElement inputField = InputFields(fieldname);

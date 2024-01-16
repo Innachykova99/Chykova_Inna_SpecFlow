@@ -18,6 +18,12 @@ namespace InnaFeature.Steps
             alertsFramesAndWindows = new AlertsFramesAndWindows(browserHelper);
         }
 
+        [Given(@"User is on ""([^""]*)"" homepage")]
+        public void GivenUserIsOnTheHomepage(string applicationUnderTestUrl)
+        {
+            browserHelper.WebDriver.Navigate().GoToUrl(applicationUnderTestUrl);
+        }
+
         [Given(@"User is on the ""([^""]*)"" category")]
         public void GivenUserIsOnTheSection(string category)
         {
@@ -30,10 +36,16 @@ namespace InnaFeature.Steps
             basePage.NavigateToTheSection(section);
         }
 
-        [When(@"User clicks the ""([^""]*)"" button")]
-        public void WhenUserClicksTheButton()
+        [When(@"User clicks the New Tab button")]
+        public void WhenUserClicksTheNewTabButton()
         {
             alertsFramesAndWindows.NewTabButton.Click();
+        }
+
+        [When(@"User clicks the New Window button")]
+        public void WhenUserClicksTheNewWindowButton()
+        {
+            alertsFramesAndWindows.NewWindowButton.Click();
         }
 
         [When(@"User switches to the new tab")]
@@ -41,12 +53,6 @@ namespace InnaFeature.Steps
         {
             var handles = browserHelper.WebDriver.WindowHandles;
             browserHelper.WebDriver.SwitchTo().Window(handles[^1]);
-        }
-
-        [When(@"User navigates to ""([^""]*)"" section")]
-        public void WhenUserNavigatesToSection(string section)
-        {
-            basePage.NavigateToTheSection(section);
         }
 
         [When(@"User switches to the new window")]
@@ -63,13 +69,7 @@ namespace InnaFeature.Steps
             }
         }
 
-        [Then(@"User verifies that the text ""([^""]*)"" is present")]
-        public void ThenUserVerifiesThatTheTextIsPresent()
-        {
-            alertsFramesAndWindows.PresentedText.Displayed.Should().BeTrue("The text is not displayed");
-        }
-
-        [Then(@"User verifies that the text ""([^""]*)"" is presented")]
+        [Then(@"User verifies that the text This is a sample page is presented")]
         public void ThenUserVerifiesThatTheTextIsPresented()
         {
             alertsFramesAndWindows.PresentedText.Displayed.Should().BeTrue("The text is not displayed");

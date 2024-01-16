@@ -1,7 +1,6 @@
 ﻿using InnaFeature.Helpers.Browser;
 using InnaFeature.Models;
 using InnaFeature.Pages;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using TechTalk.SpecFlow.Assist;
 
@@ -26,26 +25,12 @@ namespace InnaFeature.Steps
             "Address",
             "State and City"
         };
-
+        
         public FormsSteps(IBrowserHelper browserHelper)
         {
             this.browserHelper = browserHelper;
             basePage = new BasePage(browserHelper);
         }
-
-        [Given(@"User is on the ""([^""]*)"" homepage")]
-        public void GivenUserIsOnTheHomepage(string applicationUnderTestUrl)
-        {
-            this.browserHelper.WebDriver.Navigate().GoToUrl(applicationUnderTestUrl);
-        }
-
-
-        //[Given(@"User is on the https://demoqa\.com/ homepage")]
-        //public void GivenUserIsOnTheHttpsDemoqa_ComHomepage()
-        //{
-        //    BrowserHelper = new BrowserHelper();
-        //    BrowserHelper.GetDriver();
-        //}
 
         [Given(@"User navigates to the category named ""([^""]*)""")]
         public void UserNavigatesToTheCategoryNamedForms(string categoryName)
@@ -53,21 +38,9 @@ namespace InnaFeature.Steps
             basePage.NavigateToTheCategory(categoryName);
         }
 
-        [When(@"User navigates to the ""([^""]*)"" section")]
-        public void WhenUserNavigatesToThePractivceFormSection(string sectionName)
-        {
-            basePage.NavigateToTheSection(sectionName);
-        }
-
         [When(@"User fills out the text fields with data from the table")]
         public void UserFillsOutTheTextFieldsWithDataFromTheTable(Table table)
         {
-            //var firstName = table.Rows[0]["First Name"];
-            //var lastName = table.Rows[0]["Last Name"];
-            //var userEmail = table.Rows[0]["Email"];
-            //var userNumber = table.Rows[0]["Mobile"];
-            //var currentAddress = table.Rows[0]["Current Address"];
-
             var userInputData = table.CreateInstance<UserInputData>();
 
             forms.InputFieldsAndSendKeys("FirstName", userInputData.FirstName);
@@ -91,7 +64,7 @@ namespace InnaFeature.Steps
                     break;
             }
 
-            
+
             ((IJavaScriptExecutor)browserHelper.WebDriver).ExecuteScript("arguments[0].click();", radioButtonToClick);
         }
 
@@ -174,25 +147,6 @@ namespace InnaFeature.Steps
             var userInputData = table.CreateInstance<UserInputData>();
         }
 
-        private void VerifyTheDataInTheModalMatchesTheInputData(UserInputData actualData)
-        {
-            {
-                //VerifyDataInModal("StudentName", actualData.FirstName + " " + actualData.LastName);
-                //VerifyDataInModal("StudentEmail", actualData.Email);
-                //VerifyDataInModal("Gender", actualData.Gender);
-                //VerifyDataInModal("Mobile", actualData.Mobile);
-                //VerifyDataInModal("DateOfBirth", actualData.DateOfBirth);
-                //VerifyDataInModal("Subjects", actualData.Subjects);
-                //VerifyDataInModal("Hobbies", actualData.Hobbies);
-                //VerifyDataInModal("Address", actualData.CurrentAddress);
-                //VerifyDataInModal("StateAndCity", actualData.State + " " + actualData.City);
-            }
-        }
-        //public void VerifyDataInModal(string fieldName, string expectedValue)
-        //{
-        //    Console.WriteLine($"Verifying {fieldName}: Expected - {expectedValue}");
-        //}
-
         private void VerifyData(UserInputData expectedData)
         {
             FormData actualData = new FormData();
@@ -201,4 +155,3 @@ namespace InnaFeature.Steps
     }
 }
 
-        

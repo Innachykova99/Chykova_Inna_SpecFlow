@@ -18,12 +18,6 @@ namespace InnaFeature.Steps
             interactions = new Interactions(browserHelper);
         }
 
-        [Given(@"User is on the ""([^""]*)"" homepage")]
-        public void GivenUserIsOnTheDemoqa_ComHomepage(string applicationUnderTestUrl)
-        {
-            browserHelper.WebDriver.Navigate().GoToUrl(applicationUnderTestUrl);
-        }
-
         [Given(@"User navigates to the category ""([^""]*)""")]
         public void NavigateToTheInteractionsCategory(string category)
         {
@@ -36,18 +30,18 @@ namespace InnaFeature.Steps
             basePage.NavigateToTheSection(section);
         }
 
-        [When(@"User clicks on the ""([^""]*)"" tab")]
+        [When(@"User clicks on Grid tab")]
         public void NavigateToGridTab()
         {
             interactions.GridTab.Click();
         }
 
-        [When(@"User selects squares (.*), (.*), (.*), (.*), and (.*)")]
-        public void SelectSquares()
+        [When(@"User selects squares ""([^""]*)""")]
+        public void SelectSquares(string squareNumbers)
         {
-            string[] squareNumbersToSelect = new string[] { "One", "Three", "Five", "Seven", "Nine" };
+            var squares = squareNumbers.Split(',');
 
-            foreach (string squareNumber in squareNumbersToSelect)
+            foreach (string squareNumber in squares)
             {
                 interactions.SquareElement(squareNumber).Click();
             }

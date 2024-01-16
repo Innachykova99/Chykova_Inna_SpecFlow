@@ -1,11 +1,11 @@
 ﻿Feature: Interactions
 
 Background: 
-Given User is on the "https://demoqa.com/" homepage
+Given User is on "https://demoqa.com/" homepage
 
   Scenario: Testing Selectable interaction
-    Given User navigates to the category "Interactions" 
-    When User navigates to section "Selectable"
-        And User clicks on the "Grid" tab
-        And User selects squares 1, 3, 5, 7, and 9
+    Given User navigates to "Interactions" category
+    When User navigates to "Selectable" section
+        And User clicks on Grid tab
+        And User selects squares "One,Three,Five,Seven,Nine"
     Then User verifies the selected values are One, Three, Five, Seven, and Nine respectively

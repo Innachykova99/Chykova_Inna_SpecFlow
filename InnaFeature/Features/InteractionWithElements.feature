@@ -5,13 +5,13 @@
   In order to perform specific actions and verify their functionality
 
 Background:
-	Given User is on the "https://demoqa.com/" homepage
+	Given User is on "https://demoqa.com/" homepage
 
 Scenario Outline: Verify all entered data in the table after form submission
-	When User navigates to the "Elements" category 
-		And User navigates to the "Text Box" section
+	Given User navigates to "Elements" category 
+		When User navigates to "Text Box" section
 		And User completes the form with <FullName> and <Email> and <CurrentAddress> and <PermanentAddress>
-		And User clicks on "Submit"
+		And User clicks Submit button
 		Then User verifies that <FullName> and <Email> and <CurrentAddress> and <PermanentAddress> match the table content
 
 Examples:
@@ -20,8 +20,8 @@ Examples:
     
     
 Scenario: Select specific items from various folders
-	Given User navigates to the the category named "Elements" 
-	When User navigates to the "Check Box" section
+	Given User navigates to "Elements" category
+	When User navigates to "Check Box" section
 		And User expands the folder named "Home"
 		And User selects the "Desktop" folder without expanding it
 		And User expands the "Documents" folder 
@@ -35,14 +35,14 @@ Scenario: Select specific items from various folders
 
 Scenario: Verify sorting and deletion in Web Tables
 	Given User navigates to the "Elements" category 
-	When User navigates to section named "Web Tables"
+	When User navigates to "Web Tables" section
 		And User clicks on the Salary column header
 	Then User verifies that the Salary column values are in ascending order
 	When User deletes the second row from the table
 	Then User checks that there are only two rows left and no "Compliance" value in the Department column
 
 Scenario Outline: Verifying different button actions
-	Given User navigates to the "Elements" category 
+	Given User navigates to "Elements" category 
 	When User navigates to "Buttons" section
 		And User performs <action> on the <buttonName> button
 	Then User verifies that the respective message appears

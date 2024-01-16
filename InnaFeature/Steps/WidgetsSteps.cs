@@ -1,9 +1,6 @@
 ﻿using InnaFeature.Helpers.Browser;
 using InnaFeature.Pages;
-using NUnit.Framework;
 using NUnit.Framework.Legacy;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 
 
 namespace InnaFeature.Steps
@@ -31,56 +28,29 @@ namespace InnaFeature.Steps
             widgets = new Widgets(browserHelper);
         }
 
-        [Given(@"User is on the ""([^""]*)"" homepage")]
-        public void GivenUserIsOnTheDemoqa_ComHomepage(string applicationUnderTestUrl)
-        {
-            browserHelper.WebDriver.Navigate().GoToUrl(applicationUnderTestUrl);
-        }
-
         [Given(@"User navigates to ""([^""]*)"" category")]
         public void GivenUserNavigatesToCategory(string categoryName)
         {
             basePage.NavigateToTheCategory(categoryName);
         }
 
-        [Given(@"User goes to the ""([^""]*)"" category")]
-        public void GivenUserGoesToTheCategory(string categoryName)
-        {
-            basePage.NavigateToTheCategory(categoryName);
-        }
-
-
-        [Given(@"User navigates to category ""([^""]*)""")]
-        public void GivenUserNavigatesToProgressBarCategory(string categoryName)
-        {
-            basePage.NavigateToTheCategory(categoryName);
-        }
-
         [When(@"User navigates to ""([^""]*)"" section")]
-        public void WhenUserNavigatesToAutoCompleteSection(string sectionName)
+        public void WhenUserNavigatesToSection(string sectionName)
         {
             basePage.NavigateToTheSection(sectionName);
         }
 
-        [When(@"User types letter '([^']*)' in the ""([^""]*)"" field")]
+        [When(@"User types letter ""([^""]*)"" in the Type multiple color names field")]
         public void WhenUserTypesLetterInTheField(string letter)
         {
             widgets.MultipleColorNamesField.Click();
             widgets.MultipleColorNamesField.SendKeys(letter);
         }
 
-        [When(@"User navigates to ""([^""]*)"" section")]
-        public void UserNavigatesToAutoCompleteSection(string sectionName)
-        {
-            basePage.NavigateToTheSection(sectionName);
-        }
-
-        [When(@"User adds the colors Red, Yellow, Green, Blue, and Purple to the ""([^""]*)"" field")]
+        [When(@"User adds the colors Red, Yellow, Green, Blue, and Purple to the Type multiple color names field")]
         public void WhenUserAddsTheColorsRedYellowGreenBlueAndPurpleToTheField()
         {
             widgets.MultipleColorNamesField.Click();
-            var actions = new Actions(browserHelper.WebDriver);
-
 
             foreach (var color in ColorsInField)
             {
@@ -98,12 +68,13 @@ namespace InnaFeature.Steps
             widgets.RemoveColor(color2).Click();
         }
 
-        [When(@"User navigates to ""([^""]*)"" section")]
+        [When(@"User navigates to the ""([^""]*)"" section")]
         public void WhenUserNavigatesToProgressBarSection(string sectionName)
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)browserHelper.WebDriver;
-            js.ExecuteScript("arguments[0].scrollIntoView(true);", sectionName);
+            js.ExecuteScript("arguments[0].scrollIntoView(true);", basePage.Section(sectionName));
             basePage.NavigateToTheSection(sectionName);
+
         }
 
         public int GetProgressValue(IWebElement progressBar)
@@ -125,7 +96,7 @@ namespace InnaFeature.Steps
         {
             widgets.StartButton.Click();
             int currentProgress = 0;
-            int maxWaitTimeInSeconds = 10;
+            int maxWaitTimeInSeconds = 15;
             int waitTime = 0;
             int pollingInterval = 1000;
 
@@ -134,16 +105,8 @@ namespace InnaFeature.Steps
                 currentProgress = GetProgressValue(widgets.ProgressBar);
                 Thread.Sleep(pollingInterval);
                 waitTime += pollingInterval;
-
             }
-            if (currentProgress >= targetProgress)
-            {
-                Console.WriteLine($"Progress reached {targetProgress}%");
-            }
-            else
-            {
-                Console.WriteLine($"Progress did not reach {targetProgress}% within {maxWaitTimeInSeconds} seconds");
-            }
+            currentProgress.Should().Be(targetProgress);
         }
 
         [When(@"User clicks Reset")]
@@ -169,6 +132,7 @@ namespace InnaFeature.Steps
             var colorTexts = widgets.RemainColors
            .Select(colorElement => colorElement.Text.Trim())
            .Where(colorText => !string.IsNullOrWhiteSpace(colorText))
+           .Distinct(StringComparer.OrdinalIgnoreCase)
            .ToList();
 
             foreach (var colorText in colorTexts)
@@ -185,13 +149,14 @@ namespace InnaFeature.Steps
             widgets.ResetButton.Text.Should().Be("Reset");
         }
 
-        [Then(@"User verifies that the button changes back to Start and the progress is at (.*)%")]
-        public void ThenUserVerifiesThatTheButtonChangesBackToStartAndTheProgressIsAt()
+        [Then(@"User verifies that the button changes back to Start and the progress is at (.*)")]
+        public void ThenUserVerifiesThatTheButtonChangesBackToStartAndTheProgressIsAt(string p0)
         {
             widgets.StartButton.Text.Should().Be("Start");
 
-            var progressValue = GetProgressValue(widgets.ProgressBar);
-            progressValue.Should().Be(0);
+            var progressText = GetProgressValue(widgets.ProgressBar);
+
+            progressText.Should().Be(0);
         }
 
     }

@@ -1,5 +1,4 @@
 ﻿using InnaFeature.Helpers.Browser;
-using OpenQA.Selenium;
 
 namespace InnaFeature.Pages
 {
@@ -10,7 +9,6 @@ namespace InnaFeature.Pages
         public BasePage(IBrowserHelper browserhelper)
         {
             browserHelper = browserhelper ?? throw new ArgumentNullException(nameof(browserhelper));
-
         }
 
         public IWebElement ElementsTypeButtonByName(string name) =>
@@ -28,8 +26,8 @@ namespace InnaFeature.Pages
         {
             IWebElement sectionButton = Section(sectionName);
             sectionButton.Click();
-        }
 
+        }
 
     }
 

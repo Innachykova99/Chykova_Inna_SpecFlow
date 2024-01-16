@@ -1,5 +1,4 @@
 ﻿using InnaFeature.Helpers.Browser;
-using OpenQA.Selenium;
 
 namespace InnaFeature.Pages
 {

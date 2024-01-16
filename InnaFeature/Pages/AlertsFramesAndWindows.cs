@@ -1,5 +1,4 @@
 ﻿using InnaFeature.Helpers.Browser;
-using OpenQA.Selenium;
 
 namespace InnaFeature.Pages
 {
@@ -15,8 +14,6 @@ namespace InnaFeature.Pages
             browserHelper.WebDriver.FindElement(By.XPath("//*[@id = 'sampleHeading' and contains(text(), 'This is a sample page')]"));
         public IWebElement NewWindowButton =>
             browserHelper.WebDriver.FindElement(By.XPath("//*[@id = 'windowButton']"));
-
-
     }
 
 }
