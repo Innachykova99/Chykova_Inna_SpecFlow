@@ -35,4 +35,3 @@ namespace InnaFeature.Helpers.Browser
 
     }
 }
-

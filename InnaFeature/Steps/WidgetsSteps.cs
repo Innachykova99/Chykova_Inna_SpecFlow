@@ -109,6 +109,12 @@ namespace InnaFeature.Steps
             currentProgress.Should().Be(targetProgress);
         }
 
+        [When(@"User verifies that the button changes to Reset")]
+        public void UserVerifiesThatTheButtonChangesToReset()
+        {
+            widgets.ResetButton.Text.Should().Be("Reset");
+        }
+
         [When(@"User clicks Reset")]
         public void WhenUserClicksReset()
         {
@@ -141,12 +147,6 @@ namespace InnaFeature.Steps
             }
             colorTexts.Count.Should().Be(3);
             CollectionAssert.AreEquivalent(new[] { "Red", "Green", "Blue" }, colorTexts);
-        }
-
-        [Then(@"User verifies that the button changes to Reset")]
-        public void ThenUserVerifiesThatTheButtonChangesToReset()
-        {
-            widgets.ResetButton.Text.Should().Be("Reset");
         }
 
         [Then(@"User verifies that the button changes back to Start and the progress is at (.*)")]

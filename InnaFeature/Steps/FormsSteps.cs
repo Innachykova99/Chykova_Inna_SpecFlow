@@ -25,7 +25,7 @@ namespace InnaFeature.Steps
             "Address",
             "State and City"
         };
-        
+
         public FormsSteps(IBrowserHelper browserHelper)
         {
             this.browserHelper = browserHelper;
@@ -107,7 +107,6 @@ namespace InnaFeature.Steps
 
         }
 
-
         [When(@"User selects ""([^""]*)"" and ""([^""]*)"" checkboxes for ""([^""]*)""")]
         public void UserSelectsReadingAndMusicCheckboxesForHobbies(string reading, string music, string hobbies)
         {
@@ -154,4 +153,3 @@ namespace InnaFeature.Steps
         }
     }
 }
-

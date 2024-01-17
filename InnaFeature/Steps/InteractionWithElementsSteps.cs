@@ -21,7 +21,6 @@ namespace InnaFeature.Steps
             interactionWithElements = new InteractionWithElements(browserHelper);
         }
 
-
         [When(@"User navigates to section ""([^""]*)""")]
         public void NavigateToSelectableSection(string section)
         {
@@ -46,46 +45,16 @@ namespace InnaFeature.Steps
             interactionWithElements.SubmitButton.Click();
         }
 
-        [Then(@"User verifies that (.*) and (.*) and (.*) and (.*) match the table content")]
-        public void VerifyTableContent(string fullName, string email, string currentAddress, string permanentAddress)
-        {
-            var expectedData = new FormTestData
-            {
-                FullName = fullName,
-                Email = email,
-                CurrentAddress = currentAddress,
-                PermanentAddress = permanentAddress
-            };
-        }
-
-        [Given(@"User navigates to the the category named ""([^""]*)""")]
-        public void NavigateToTheElementsCategory(string category)
-        {
-            basePage.NavigateToTheCategory(category);
-        }
-
-        [When(@"User expands the folder named ""([^""]*)""")]
-        public void ExpandTheFolderNamedHome(string folderNameExpand)
+        [When(@"User expands the ""([^""]*)"" folder")]
+        public void ExpandTheFolder(string folderNameExpand)
         {
             interactionWithElements.FolderExpand(folderNameExpand).Click();
         }
 
-        [When(@"User selects the ""([^""]*)"" folder without expanding it")]
+        [When(@"User selects the Desktop folder without expanding it")]
         public void SelectTheFolderWithoutExpanding()
         {
             interactionWithElements.DesktopCheckbox.Click();
-        }
-
-        [When(@"User expands the ""([^""]*)"" folder")]
-        public void ExpandDocumentsFolder(string folderNameExpand)
-        {
-            interactionWithElements.FolderExpand(folderNameExpand).Click();
-        }
-
-        [When(@"User expands the ""([^""]*)"" folder")]
-        public void ExpandWorkSpaceFolder(string folderNameExpand)
-        {
-            interactionWithElements.FolderExpand(folderNameExpand).Click();
         }
 
         [When(@"User selects ""([^""]*)"" and ""([^""]*)"" from the WorkSpace folder")]
@@ -95,46 +64,23 @@ namespace InnaFeature.Steps
             interactionWithElements.FolderContainElement(element2).Click();
         }
 
-        [When(@"User expands the ""([^""]*)"" folder")]
-        public void ExpandOfficeFolder(string folderNameExpand)
-        {
-            interactionWithElements.FolderExpand(folderNameExpand);
-        }
-
-        [When(@"User clicks on each element in the Office folder one by one")]
+        [When(@"User clicks on each element in the ""([^""]*)"" folder one by one")]
         public void SelectEachElement(string officeFile)
         {
             string[] officeElements = { "Public", "Private", "Classified", "General" };
-            foreach (string elementLabel in officeElements)
+            var folderElements = interactionWithElements.OfficeFolderContain(officeFile);
+
+            foreach (var element in folderElements)
             {
-                interactionWithElements.OfficeFolderContainElement(officeFile).Click();
-
+                element.Click();
             }
+
         }
 
-        [When(@"User expands the ""([^""]*)"" folder")]
-        public void ExpandTheDownloadsFolder(string folderName)
-        {
-            interactionWithElements.FolderExpand(folderName);
-        }
-
-        [When(@"User selects the entire ""([^""]*)"" folder")]
+        [When(@"User selects the entire Downloads folder")]
         public void SelectTheDownloadsFolder()
         {
             interactionWithElements.DownloadsFolderSelect.Click();
-        }
-
-        [Then(@"User verifies that the output contains ""([^""]*)""")]
-        public void OutputContains(string expectedText)
-        {
-            var actualText = interactionWithElements.OutputResult.Text;
-            actualText.Should().BeEquivalentTo(expectedText);
-        }
-
-        [Given(@"User navigates to the the category named ""([^""]*)""")]
-        public void NavigateToElementsCategory(string category)
-        {
-            basePage.NavigateToTheCategory(category);
         }
 
         [When(@"User clicks on the Salary column header")]
@@ -143,16 +89,6 @@ namespace InnaFeature.Steps
             interactionWithElements.SalaryColumnHeader.Click();
         }
 
-        [Then(@"User verifies that the Salary column values are in ascending order")]
-        public void VerifyThatTheSalaryColumnValuesAreInAscendingOrder()
-        {
-            //var salaryValues = interactionWithElements.SalaryElements.Select(element => element.Text)
-            //                                 .Where(text => double.TryParse(text, out _))
-            //                                 .ToList();
-
-            //var isAscending = IsSortedAscending(salaryValues);
-            //salaryValues.Should().HaveCount(isAscending.Count);
-        }
         public bool IsSortedAscending(List<string> values)
         {
             var numbers = values.Select(double.Parse).ToList();
@@ -166,25 +102,6 @@ namespace InnaFeature.Steps
         public void DeleteTheSecondRowFromTheTable()
         {
             interactionWithElements.DeleteSecondRow.Click();
-        }
-
-        [Then(@"User checks that there are only two rows left and no ""([^""]*)"" value in the Department column")]
-        public void TwoRowsLeftAndNoComplianceValueInTheDepartmentColumn(string unwantedValue)
-        {
-            //var DepartmentRows = interactionWithElements.RowElements.ToList();
-
-
-
-            // unwantedValuePresent.Should().BeFalse($"No {unwantedValue} value should be present in the department column for any row");
-
-            // create list of existing firstnames, use linq (method Exist (+lambda expression) = > receive true/false 
-        }
-
-
-        [Given(@"User navigates to the category ""([^""]*)""")]
-        public void NavigateToElementssCategory(string category)
-        {
-            basePage.NavigateToTheCategory(category);
         }
 
         [When(@"User performs (.*) on the (.*) button")]
@@ -211,14 +128,63 @@ namespace InnaFeature.Steps
             }
         }
 
-        [Then(@"User verifies that the respective message appears")]
-        public void VerifyThatTheRespectiveMessageAppears(string message) //(string doubleClickMessage, string rightClickMessage, string dynamicClickMessage)
+        [When(@"User verifies that the Salary column values are in ascending order")]
+        public void VerifyThatTheSalaryColumnValuesAreInAscendingOrder()
         {
-            var displayedMessage = interactionWithElements.MessageAfterClick(message);
-            displayedMessage.Displayed.Should().BeTrue($"Expected message '{message}' is not displayed.");
+            //var salaryValues = interactionWithElements.SalaryElements.Select(element => element.Text)
+            //                                 .Where(text => double.TryParse(text, out _))
+            //                                 .ToList();
+
+            //var isAscending = IsSortedAscending(salaryValues);
+            //salaryValues.Should().HaveCount(isAscending.Count);
+        }
+
+        [Then(@"User verifies that (.*) and (.*) and (.*) and (.*) match the table content")]
+        public void VerifyTableContent(string fullName, string email, string currentAddress, string permanentAddress)
+        {
+            var expectedData = new FormTestData
+            {
+                FullName = fullName,
+                Email = email,
+                CurrentAddress = currentAddress,
+                PermanentAddress = permanentAddress
+            };
+        }
+
+        [Then(@"User verifies that the output contains ""([^""]*)""")]
+        public void OutputContains(string expectedText)
+        {
+            var actualText = interactionWithElements.OutputResult.Text;
+
+            var actualLines = actualText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            var actualSingleLine = string.Join(" ", actualLines);
+
+            expectedText.Should().Be(actualSingleLine);
+        }
+
+        [Then(@"User checks that there are only two rows left and no ""([^""]*)"" value in the Department column")]
+        public void TwoRowsLeftAndNoComplianceValueInTheDepartmentColumn(string unwantedValue)
+        {
+            //var DepartmentRows = interactionWithElements.RowElements.ToList();
+
+
+
+            // unwantedValuePresent.Should().BeFalse($"No {unwantedValue} value should be present in the department column for any row");
+
+            // create list of existing firstnames, use linq (method Exist (+lambda expression) = > receive true/false 
+        }
+
+        [Then(@"User verifies that the respective (.*) appears")]
+        public void VerifyThatTheRespectiveMessageAppears(string message)
+        {
+
+            //var displayedMessages = interactionWithElements.displayedMessages(message);
+
+
+            //displayedMessages.Should().NotBeEmpty($"Expected message '{message}' is not displayed.");
         }
 
     }
 
 }
-

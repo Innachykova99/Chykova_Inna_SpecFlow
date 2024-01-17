@@ -1,6 +1,5 @@
 ﻿using InnaFeature.Helpers.Browser;
 using InnaFeature.Pages;
-using NUnit.Framework;
 
 namespace InnaFeature.Steps
 {
@@ -59,14 +58,8 @@ namespace InnaFeature.Steps
         public void WhenUserSwitchesToTheNewWindow()
         {
             var handles = browserHelper.WebDriver.WindowHandles;
-            if (handles.Count >= 2)
-            {
-                browserHelper.WebDriver.SwitchTo().Window(handles[1]);
-            }
-            else
-            {
 
-            }
+            browserHelper.WebDriver.SwitchTo().Window(handles[1]);
         }
 
         [Then(@"User verifies that the text This is a sample page is presented")]

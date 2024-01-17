@@ -13,6 +13,7 @@ namespace InnaFeature.Pages
 
         public IWebElement ElementsTypeButtonByName(string name) =>
             browserHelper.WebDriver.FindElement(By.XPath($"//*[@class='card-body']/h5[contains(text(), '{name}')]"));
+
         public IWebElement Section(string section) =>
            browserHelper.WebDriver.FindElement(By.XPath($"//*[@class='text'][contains(text(), '{section}')]"));
 

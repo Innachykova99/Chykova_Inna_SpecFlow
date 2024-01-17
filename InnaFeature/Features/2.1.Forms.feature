@@ -1,11 +1,10 @@
-﻿Feature: Forms Category
+﻿Feature: 2.1.Forms Category
 
 Background: 
 Given User is on "https://demoqa.com/" homepage
 
-Scenario: Filling out the Practice Form
+Scenario: 2.1.1.Filling out the Practice Form
     Given User navigates to the category named "Forms" 
-    Given User opens the browser with width 1000 and height 500
     When User navigates to "Practice Form" section
         And User fills out the text fields with data from the table
         | FirstName | LastName | Email             | Mobile     | CurrentAddress  |
