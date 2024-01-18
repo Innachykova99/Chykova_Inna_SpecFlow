@@ -9,14 +9,14 @@ Background:
 
 Scenario Outline: 1.1.1.Verify all entered data in the table after form submission
 	Given User navigates to "Elements" category 
-		When User navigates to "Text Box" section
-		And User completes the form with <FullName> and <Email> and <CurrentAddress> and <PermanentAddress>
-		And User clicks Submit button
-		Then User verifies that <FullName> and <Email> and <CurrentAddress> and <PermanentAddress> match the table content
+			When User navigates to "Text Box" section
+			And User completes the form with <FullName>, <Email>, <CurrentAddress> and <PermanentAddress>
+			And User clicks Submit button
+			Then User verifies that <FullName> and <Email> and <CurrentAddress> and <PermanentAddress> match the table content
 
-Examples:
-	| FullName     | Email             | CurrentAddress          | PermanentAddress |
-	| Inna Chykova | innac@example.com | 7 Cherednichenkivsky St | 662 Svobody Ave  |
+	Examples:
+		| FullName     | Email             | CurrentAddress          | PermanentAddress |
+		| Inna Chykova | innac@example.com | 7 Cherednichenkivsky St | 662 Svobody Ave  |
     
     
 Scenario: 1.1.2.Select specific items from various folders
@@ -45,10 +45,10 @@ Scenario Outline: 1.1.4.Verifying different button actions
 	Given User navigates to "Elements" category 
 	When User navigates to "Buttons" section
 		And User performs <action> on the <buttonName> button
-	Then User verifies that the respective <message> appears
+	Then User verifies that the respective <message> appears for relevant <buttonId>
 
 Examples:
-	| Action       | ButtonName      | Message                       |
-	| single click | Click Me        | You have done a dynamic click |
-	| double click | Double Click Me | You have done a double click  |
-	| right click  | Right Click Me  | You have done a right click   |
+	| action       | buttonName      | message                       | buttonId            |
+	| single click | Click Me        | You have done a dynamic click | dynamicClickMessage |
+	| double click | Double Click Me | You have done a double click  | doubleClickMessage  |
+	| right click  | Right Click Me  | You have done a right click   | rightClickMessage   |

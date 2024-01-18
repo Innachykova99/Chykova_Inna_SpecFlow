@@ -2,7 +2,6 @@
 using InnaFeature.Models;
 using InnaFeature.Pages;
 using OpenQA.Selenium.Interactions;
-using TechTalk.SpecFlow.Assist;
 
 
 namespace InnaFeature.Steps
@@ -13,6 +12,7 @@ namespace InnaFeature.Steps
         private readonly BasePage basePage;
         private readonly InteractionWithElements interactionWithElements;
         private readonly IBrowserHelper browserHelper;
+        private FormTestData enteredData;
 
         public InteractionWithElementsSteps(IBrowserHelper browserHelper)
         {
@@ -21,22 +21,21 @@ namespace InnaFeature.Steps
             interactionWithElements = new InteractionWithElements(browserHelper);
         }
 
-        [When(@"User navigates to section ""([^""]*)""")]
-        public void NavigateToSelectableSection(string section)
+        [When(@"User completes the form with (.*), (.*), (.*) and (.*)")]
+        public void CompleteTheForm(string userName, string userEmail, string currentAddress, string permanentAddress)
         {
-            basePage.NavigateToTheSection(section);
-        }
+            enteredData = new FormTestData
+            {
+                FullName = userName,
+                Email = userEmail,
+                CurrentAddress = currentAddress,
+                PermanentAddress = permanentAddress
+            };
 
-        [When(@"User completes the form with (.*) and (.*) and (.*) and (.*)")]
-        public void CompleteTheForm(Table table)
-        {
-            var formTestData = table.CreateInstance<FormTestData>();
-
-            interactionWithElements.InputFieldsAndSendKeys("FullName", formTestData.FullName);
-            interactionWithElements.InputFieldsAndSendKeys("Email", formTestData.Email);
-            interactionWithElements.InputFieldsAndSendKeys("CurrentAddress", formTestData.CurrentAddress);
-            interactionWithElements.InputFieldsAndSendKeys("PermanentAddress", formTestData.PermanentAddress);
-
+            interactionWithElements.InputFields("userName").SendKeys(userName);
+            interactionWithElements.InputFields("userEmail").SendKeys(userEmail);
+            interactionWithElements.InputFields("currentAddress").SendKeys(currentAddress);
+            interactionWithElements.InputFields("permanentAddress").SendKeys(permanentAddress);
         }
 
         [When(@"User clicks Submit button")]
@@ -89,15 +88,6 @@ namespace InnaFeature.Steps
             interactionWithElements.SalaryColumnHeader.Click();
         }
 
-        public bool IsSortedAscending(List<string> values)
-        {
-            var numbers = values.Select(double.Parse).ToList();
-            var sortedNumbers = new List<double>(numbers);
-            sortedNumbers.Sort();
-
-            return numbers.SequenceEqual(sortedNumbers);
-        }
-
         [When(@"User deletes the second row from the table")]
         public void DeleteTheSecondRowFromTheTable()
         {
@@ -107,20 +97,21 @@ namespace InnaFeature.Steps
         [When(@"User performs (.*) on the (.*) button")]
         public void PerformActionsOnButtons(string action, string buttonName)
         {
+            IWebElement buttonElement = interactionWithElements.ClickMeButtons(buttonName);
 
             Actions actions = new Actions(browserHelper.WebDriver);
             switch (action)
             {
                 case "single click":
-                    actions.Click(interactionWithElements.ClickMeButtons(buttonName));
+                    actions.Click(interactionWithElements.ClickMeButtons(buttonName)).Perform();
                     break;
 
                 case "double click":
-                    actions.DoubleClick(interactionWithElements.ClickMeButtons(buttonName));
+                    actions.DoubleClick(interactionWithElements.ClickMeButtons(buttonName)).Perform();
                     break;
 
                 case "right click":
-                    actions.ContextClick(interactionWithElements.ClickMeButtons(buttonName));
+                    actions.ContextClick(interactionWithElements.ClickMeButtons(buttonName)).Perform();
                     break;
 
                 default:
@@ -131,24 +122,28 @@ namespace InnaFeature.Steps
         [When(@"User verifies that the Salary column values are in ascending order")]
         public void VerifyThatTheSalaryColumnValuesAreInAscendingOrder()
         {
-            //var salaryValues = interactionWithElements.SalaryElements.Select(element => element.Text)
-            //                                 .Where(text => double.TryParse(text, out _))
-            //                                 .ToList();
+            var salaryValues = interactionWithElements.SalaryCells;
 
-            //var isAscending = IsSortedAscending(salaryValues);
-            //salaryValues.Should().HaveCount(isAscending.Count);
+            var salaryArray = salaryValues.Select(element => element.Text).ToArray();
+            var sortedSalaryArray = salaryArray.ToArray();
+            Array.Sort(sortedSalaryArray);
+
+            salaryArray.Should().BeEquivalentTo(sortedSalaryArray, "Salary column values are not in ascending order");
         }
 
+
         [Then(@"User verifies that (.*) and (.*) and (.*) and (.*) match the table content")]
-        public void VerifyTableContent(string fullName, string email, string currentAddress, string permanentAddress)
+        public void VerifyTableContent(string enteredName, string email, string currentAddress, string permanentAddress)
         {
-            var expectedData = new FormTestData
-            {
-                FullName = fullName,
-                Email = email,
-                CurrentAddress = currentAddress,
-                PermanentAddress = permanentAddress
-            };
+            var actualName = interactionWithElements.NameResultAfterSubmit(enteredName).Text;
+            var actualEmail = interactionWithElements.EmailResultAfterSubmit(email).Text;
+            var actualCurrentAddress = interactionWithElements.CurrentAddressResultAfterSubmit(currentAddress).Text;
+            var actualPermanentAddress = interactionWithElements.PermanentAddressResultAfterSubmit(permanentAddress).Text;
+
+            enteredData.FullName.Should().Be(actualName); // 'Expected enteredData.FullName to be "Name:Inna Chykova" with a length of 17, but "Inna Chykova" has a length of 12, differs near "Inn" (index 0).'
+            enteredData.Email.Should().Be(actualEmail);
+            enteredData.CurrentAddress.Should().Be(actualCurrentAddress);
+            enteredData.PermanentAddress.Should().Be(actualPermanentAddress);
         }
 
         [Then(@"User verifies that the output contains ""([^""]*)""")]
@@ -166,23 +161,15 @@ namespace InnaFeature.Steps
         [Then(@"User checks that there are only two rows left and no ""([^""]*)"" value in the Department column")]
         public void TwoRowsLeftAndNoComplianceValueInTheDepartmentColumn(string unwantedValue)
         {
-            //var DepartmentRows = interactionWithElements.RowElements.ToList();
-
-
-
-            // unwantedValuePresent.Should().BeFalse($"No {unwantedValue} value should be present in the department column for any row");
-
-            // create list of existing firstnames, use linq (method Exist (+lambda expression) = > receive true/false 
+            var departmentValues = interactionWithElements.DepartmentCells.Select(element => element.Text).ToList();
+            departmentValues.Should().NotContain(unwantedValue);
         }
 
-        [Then(@"User verifies that the respective (.*) appears")]
-        public void VerifyThatTheRespectiveMessageAppears(string message)
+        [Then(@"User verifies that the respective (.*) appears for relevant (.*)")]
+        public void VerifyThatTheRespectiveMessageAppears(string message, string buttonId)
         {
-
-            //var displayedMessages = interactionWithElements.displayedMessages(message);
-
-
-            //displayedMessages.Should().NotBeEmpty($"Expected message '{message}' is not displayed.");
+            var displayedElements = interactionWithElements.DisplayedMessages(buttonId, message);
+            displayedElements.Should().NotBeEmpty($"Expected message '{message}' is not displayed for '{buttonId}'.");
         }
 
     }
